@@ -1,6 +1,26 @@
 # Final project proposal
 
 
+Title: Analysis of Temperature and PM 2.5 levels in Tamil Nadu
+
+Description of the project: For this project we will use data from Low Cost Sensors in habitations in rural Tamil Nadu to investigate relationships between temperature, humidity and PM 2.5 levels in the region. 
+
+Names: Priya Riley and Mina Burns
+
+Data required and how it is obtained:
+Data from low cost sensor network deployed in Tamil Nadu, districts Kallakurichi and Nagapattinam.
+AAM-LASSI dataset. Ambient Air Monitoring of LPG At Scale in South India 
+From Mina’s research with the Center for Occupational and Environmental Health 
+
+Three questions / analysis tasks:
+1) Look at connections between temperature and PM 2.5 in one village in India over a time period of about one year. 
+2) Investigate relationship between humidity and PM 2.5 in one village in India over a time period of about one year. 
+3) Compare the two districts, Kallakurichi and Nagapattinam (coastal and inland, respectively), for PM2.5 measurements. 
+
+
+
+
+----------------------------------------------------------------------------------------------------
 Please prepare a short proposal on your final project idea by **Nov 2**. The proposal should include:
 
 - Title & description of the project
