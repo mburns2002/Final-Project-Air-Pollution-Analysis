@@ -3,8 +3,8 @@
 
 ## Team Members:
 
-- full name, github handle
-- full name, github handle
+- Mina Burns @mburns2002
+- Priya Riley @PriyaRiley
 
 This repository is a template for your team's repository.
 
