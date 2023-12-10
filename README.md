@@ -1,5 +1,5 @@
 
-*add GitHub Actions badge here*
+[![Reproducibility](https://github.com/espm-157/final-group-mina_priya-final/actions/workflows/main.yml/badge.svg)](https://github.com/espm-157/final-group-mina_priya-final/actions/workflows/main.yml)
 
 ## Team Members:
 
