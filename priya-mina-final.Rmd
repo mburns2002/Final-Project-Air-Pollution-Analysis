@@ -66,12 +66,20 @@ library("readr")
 
 #read the csv into r. The csv covers ambient and household emissions data in Tamil Nadu, India.
 
+<<<<<<< HEAD
+#### Data Visualizations using Outdoor Cleaned Data
+=======
 dailymeans_outdoor_emissons <- read_csv("dailymeans_outdoor_HH_cleaned.csv", show_col_types = FALSE)
 dailymeans_outdoor_emissions <- dailymeans_outdoor_emissons[, -which(names(dailymeans_outdoor_emissons) == "...1")]
 head(dailymeans_outdoor_emissions)
 ```
 
+<<<<<<< HEAD
 #### Cleaning and Preparing Data
+=======
+#### Data visualizations using outdoor cleaned data
+>>>>>>> ff14a1a7d074fd26b2ffab866fd0726bb9d64550
+>>>>>>> f5be6b3e029b45b544609194955f7f505cd1befd
 
 ```{r}
 #filter where the qa_flags and da_flags are above 0, which means they have been flagged for an error.
