@@ -1,10 +1,10 @@
 
-*add GitHub Actions badge here*
+[![Reproducibility](https://github.com/espm-157/final-group-mina_priya-final/actions/workflows/main.yml/badge.svg)](https://github.com/espm-157/final-group-mina_priya-final/actions/workflows/main.yml)
 
 ## Team Members:
 
-- full name, github handle
-- full name, github handle
+- Mina Burns @mburns2002
+- Priya Riley @PriyaRiley
 
 This repository is a template for your team's repository.
 
