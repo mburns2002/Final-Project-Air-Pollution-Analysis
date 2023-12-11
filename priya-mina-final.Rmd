@@ -64,14 +64,14 @@ library("readr")
 #urlfile <- "https://raw.githubusercontent.com/espm-157/final-group-mina_priya-final/master/dailymeans_outdoor_HH#_cleaned.csv?token=GHSAT0AAAAAACGN2DF6XHPFK3AQW5LIRRAGZLWMMIQ"
 #read_csv(url(urlfile), show_col_types = FALSE)
 
-# read the csv into r. The csv covers ambient and household emissions data in Tamil Nadu, India.
+#read the csv into r. The csv covers ambient and household emissions data in Tamil Nadu, India.
 
 dailymeans_outdoor_emissons <- read_csv("dailymeans_outdoor_HH_cleaned.csv", show_col_types = FALSE)
 dailymeans_outdoor_emissions <- dailymeans_outdoor_emissons[, -which(names(dailymeans_outdoor_emissons) == "...1")]
 head(dailymeans_outdoor_emissions)
 ```
 
-#### Data visualizations using outdoor cleaned data
+#### Cleaning and Preparing Data
 
 ```{r}
 #filter where the qa_flags and da_flags are above 0, which means they have been flagged for an error.
@@ -94,7 +94,9 @@ NP_cleaned_emissions = filter(cleaned_data, district == "NP")
 
 Great - all preliminary tables are set up. Now we can explore the data and our questions. 
 
-### Moving on to district NP for the first 2 questions.
+#### Data visualizations using outdoor cleaned data
+
+We will use district NP for the first 2 questions.
 
 ```{r}
 #For our first two questions, we only need to look at the date, district, variable, and mean_of_medians.
@@ -122,19 +124,16 @@ filtered_temp = NP_selected_data %>%
   arrange(date, district) %>%
   mutate(temp_values = mean_of_medians) %>%
   select("date","district","variable","temp_values")
-#head(filtered_temp)
+#head(filtered_temp) 
 ```
 
-When I look at the number of inputs per date, I see that they have
-different numbers. Therefore I need to make them into an average value
-per date.
+When I look at the number of inputs per date, I see that they have different numbers. Therefore I need to make them into an average value per date. 
 
 ```{r}
 average_NP_pm2.5 = filtered_pm2.5 %>%
   group_by(date) %>%
   summarise(avg_pm2.5 = mean(pm2.5_values))
-
-#average_NP_pm2.5
+head(average_NP_pm2.5)
 ```
 
 
@@ -143,10 +142,10 @@ average_NP_temp = filtered_temp %>%
   group_by(date) %>%
   summarise(avg_temp = mean(temp_values))
 
-#average_NP_temp
+head(average_NP_temp)
 ```
 
-Awesome. Now I can make some plots with these averages.
+Awesome. I now have tables with the average values of temp or PM2.5 per day. Now I can make some plots with these averages.
 
 ```{r}
 ggplot() + 
@@ -155,32 +154,44 @@ ggplot() +
   ggtitle("Avg Temperature and PM 2.5 Concentrations per Day") + 
   labs(x= "Date", y = "Mean Values") +
   scale_x_date(date_labels = "%Y-%m-%d", date_breaks = "1 month") + 
+  scale_y_continuous(breaks = seq(0, 100, 15)) + 
+  theme_bw() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
 ```
 
-This isn't super helpful to me. Lets break it down and see if that helps.
+This is a plot with the average temperatures plotted over the average PM2.5 concentrations.
+The makeup of this graph isn't super helpful to me. Lets break it down and see if that helps.
 
 ```{r}
 avg_temp_plot = ggplot() + 
   geom_point(data = average_NP_temp, aes(x=date, y=avg_temp), color = "coral") +
-  ggtitle("Avg temperature values per day") + 
+  ggtitle("Avg Temperature Values per Day") + 
   labs(x= "Date", y = "Mean Values") +
   scale_x_date(date_labels = "%Y-%m-%d", date_breaks = "2 month") + 
+  scale_y_continuous(breaks = seq(0, 40, 5)) + 
+  theme_bw() + 
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
+avg_temp_plot
+```
 
+Above, the Avg Temperatures per Day plot shows that the temps fluctuate up and down. Higher temps occur from 2022-04 (April) to 2022-07 (July) in 2022, and 2023-04 (April) to 2023-06 (June) in 2023. 
+
+```{r}
 avg_pm25_plot = ggplot() + 
   geom_point(data = average_NP_pm2.5, aes(x=date, y = avg_pm2.5), color = "lightblue") +
-  ggtitle("Avg PM 2.5 concentrations per day") + 
+  ggtitle("Avg PM 2.5 Concentrations per Day") + 
   labs(x= "Date", y = "Mean Values") +
-   scale_x_date(date_labels = "%Y-%m-%d", date_breaks = "2 month") + 
+  scale_x_date(date_labels = "%Y-%m-%d", date_breaks = "2 month") + 
+  scale_y_continuous(breaks = seq(0, 100, 15)) + 
+  theme_bw() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 
-avg_temp_plot
+
 avg_pm25_plot
 ```
-These two plots allow us to take a closer look at each graph. 
-Higher temps occur from April to July in 2022, and April to June in 2023. 
-Lower PM 2.5 occurs from April to September in 2022, and July in 2023 which is interesting......
+
+We see from the average PM2.5 concentrations per day plot that lower PM 2.5 concentrations occur from 2022-04 to 2022-09 (or April - September in 2022), and 2022-07 (July) in 2023 which is interesting. Let's look at these plots next to eachother so that we can compare temperature and PM2.5.
 
 
 ```{r}
@@ -189,14 +200,16 @@ require(gridExtra)
 grid.arrange(avg_temp_plot, avg_pm25_plot, ncol=2)
 ```
 
-From the graphs above, for temperature, we can see that the months of April (2022-04) - July (2022-07) experience higher temperatures. This makes sense because these are summer months in India. Meanwhile, the months of December (2022-12) to March (2023-03) experience lower temperatures, which coincides with the winter months. Meanwhile, we can see that peak PM2.5 concentrations occur from December (2022-12) to March (2023-03), which also generally aligns with colder months. This makes sense, as the PM2.5 measurements are taken from sensors that are placed near village homes for the purpose of detecting PM2.5 from cook stoves. During winter months, cook stoves are used more often for warmth and for heating food, thus it makes sense that higher PM2.5 concentrations occur during colder months.   
+From the graphs above, for temperature, we can see that the months of April (2022-04) - July (2022-07) experience higher temperatures. This makes sense because these are summer months in India. Meanwhile, the months of December (2022-12) to March (2023-03) experience lower temperatures, which coincides with the winter months. Meanwhile, we can see that peak PM2.5 concentrations occur from December (2022-12) to March (2023-03), which also generally aligns with colder months. This makes sense, as the PM2.5 measurements are taken from sensors that are placed near village homes for the purpose of detecting PM2.5 from cook stoves. During winter months, cook stoves are used more often for warmth and for heating food, thus it makes sense that higher PM2.5 concentrations occur during colder months. Likewise, it makes sense that lower PM2.5 concentrations are recorded during times of higher temperatures; there is overlap from the higher temperatures from 2022-05 to 2022-07, with lower PM2.5 concentrations at the same time. 
 
 ```{r}
 avg_temp_plot_line = ggplot() + 
   geom_line(data = average_NP_temp, aes(x=date, y=avg_temp, group = 1), color = "coral") +
   ggtitle("Avg temperature values per day") + 
   labs(x= "Date", y = "Mean Values") +
-  scale_x_date(date_labels = "%Y-%m-%d", date_breaks = "2 month") + 
+  scale_x_date(date_labels = "%Y-%m-%d", date_breaks = "2 month") +
+  scale_y_continuous(breaks = seq(0, 40, 5)) + 
+  theme_bw() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 
 avg_pm25_plot_line = ggplot() + 
@@ -204,14 +217,15 @@ avg_pm25_plot_line = ggplot() +
   ggtitle("Avg PM 2.5 concentrations per day") + 
   labs(x= "Date", y = "Mean Values") +
   scale_x_date(date_labels = "%Y-%m-%d", date_breaks = "2 month") + 
+  scale_y_continuous(breaks = seq(0, 100, 15)) + 
+  theme_bw() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 
 require(gridExtra)
 grid.arrange(avg_temp_plot_line, avg_pm25_plot_line, ncol=2)
 
 ```
-It lets us see the general shape that higher temps = lower pm2.5. And higher PM2.5 occurs during lower temps. Its not the most helpful but it does let us see the shape, kinda.
-
+This plot lets us see the general trend that higher temps connect with lower PM2.5, and higher PM2.5 occurs during lower temps. 
 
 
 ```{r}
@@ -227,6 +241,7 @@ combined_plot <- ggplot() +
     name = "PM2.5 Mean Values",
     sec.axis = sec_axis(~., name = "Temperature", breaks = (c(0, 20, 30, 40)))
   ) +
+  theme_bw() + 
   theme(axis.text.x = element_text(angle = 45, hjust = 1),
         axis.line.y.right = element_line(color = "coral"), 
         axis.ticks.y.right = element_line(color = "coral"),
@@ -236,7 +251,7 @@ combined_plot <- ggplot() +
 
 combined_plot
 ```
-This is not very helpful imo. the scaling doesn't help at all.
+This graph includes both variables in the same plot. It was difficult to scale so it did not end up being as helpful as we hoped.
 
 
 ##### Temp and PM 2.5 Analysis by Month.
@@ -254,7 +269,7 @@ average_NP_temp_monthly = filtered_temp %>%
   group_by(month = lubridate::floor_date(date, 'month')) %>%
   summarize(avg_monthly_temp = mean(temp_values))
 
-#head(average_NP_pm2.5_monthly)
+head(average_NP_pm2.5_monthly)
 ```
 
 ```{r}
@@ -268,6 +283,7 @@ combined_plot_monthly <- ggplot() +
     name = "PM2.5 Mean Monthly Values",
     sec.axis = sec_axis(~., name = "Temperature", breaks = (c(0, 20, 30, 40)))
   ) +
+  theme_bw() + 
   theme(axis.text.x = element_text(angle = 45, hjust = 1),
         axis.line.y.right = element_line(color = "coral"), 
         axis.ticks.y.right = element_line(color = "coral"),
@@ -276,34 +292,42 @@ combined_plot_monthly <- ggplot() +
         )
 
 combined_plot_monthly
+
+#can delete lol
 ```
 LOLLLLLLLLLL
 although - it does let us see that higher temps relate with lower pm2.5, and lower temps relate with higher pm2.5.
 
 
 ```{r}
+#can delete
 avg_temp_plot_col_monthly = ggplot() + 
   geom_col(data = average_NP_temp_monthly, aes(x=month, y=avg_monthly_temp, group = 1), fill = "coral") +
   ggtitle("Avg Temperature Values per Month") + 
   labs(x= "Date", y = "Mean Values") +
   scale_x_date(date_labels = "%Y-%m-%d", date_breaks = "2 month") + 
+  scale_y_continuous(breaks = seq(0, 40, 5)) + 
+  theme_bw() + 
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 
 avg_pm25_plot_col_monthly = ggplot() + 
   geom_col(data = average_NP_pm2.5_monthly, aes(x = month, y = avg_monthly_pm2.5, group = 1), fill = "lightblue3") +
   ggtitle("Avg PM 2.5 Concentrations per Month") + 
   labs(x= "Date", y = "Mean Values") +
-  scale_x_date(date_labels = "%Y-%m-%d", date_breaks = "2 month") + 
+  scale_x_date(date_labels = "%Y-%m-%d", date_breaks = "2 month") +
+  scale_y_continuous(breaks = seq(0, 100, 15)) + 
+  theme_bw() + 
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 
 require(gridExtra)
 grid.arrange(avg_temp_plot_col_monthly, avg_pm25_plot_col_monthly, ncol=2)
 ```
-This helps us see the lowest and highest temps and PM 2.5 concentrations. 
+This is a graph that further averages values by month. This helps us see the average monthly lowest and highest temps and PM 2.5 concentrations. 
+Highest temperatures occur from 03-06 in 2022 and 03 to 08 in 2023. 
+Lowest PM2.5 concentrations occur from 04-09 in 2022 and 06-08 in 2023. 
 
 
 ## 2.) Investigate relationship between humidity and PM 2.5 in one village in India over a time period of about one year.
-
 
 Background on humidity in Tamil Nadu, India: The most humid month of the year is November with humidity varies from 59.1% to 96.9%. The least humid month is of the year is June, with humidity varies from 41.7% to 87.0%.
 
@@ -333,9 +357,11 @@ ggplot() +
   ggtitle("Avg Humidity and PM 2.5 Concentrations per Day") + 
   labs(x= "Date", y = "Mean Values") +
   scale_x_date(date_labels = "%Y-%m-%d", date_breaks = "1 month") + 
+  scale_y_continuous(breaks = seq(0, 100, 15)) + 
+  theme_bw() + 
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 ```
-It looks like humidity and PM 2.5 follow somewhat similar patterns. When PM2.5 rises during the winter, umidity also seems to rise during Fall through Winter. When PM 2.5 has a decreasing trend starting in 2021-10 and going to 2022-07, humidity also has a decreasing trend. 
+It looks like humidity and PM 2.5 follow somewhat similar patterns. When PM2.5 rises during the Winter, humidity also seems to rise during Fall through Winter. When PM 2.5 has a decreasing trend starting in 2021-10 and going to 2022-07, humidity also has a decreasing trend. 
 
 
 ```{r}
@@ -344,20 +370,25 @@ avg_rh_plot = ggplot() +
   ggtitle("Avg humidity values per day") + 
   labs(x= "Date", y = "Mean Values") +
   scale_x_date(date_labels = "%Y-%m-%d", date_breaks = "2 month") + 
+  theme_bw() + 
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 
 avg_rh_plot
+```
+
+```{r}
 avg_pm25_plot
 ```
-These graphs allow us to look at the two plots more closely. From 2021-11 to 2022-05, humidity experiences a decreasing general trend. Its highest values seem to be around 2022-09 to 2023-02, which are the colder months. Meanwhile, from 2021-11 to 2022-07, PM 2.5 experiences a general decreasing trend. Its highest values seem to be around 2021-11 to 2022-01, and 2022-11 to 2023-01. This coincides with typically colder months. 
-## QUESTION FOR MINA: WHERE ARE THE HUMIDITY SENSORS LOCATED? is it getting humidity from the homes/stoves, or the actual air?
 
+These graphs allow us to look at the two plots more closely. From 2021-11 to 2022-05, humidity experiences a decreasing general trend. Its highest values seem to be around 2022-09 to 2023-02, which are the colder months. Meanwhile, from 2021-11 to 2022-07, PM 2.5 experiences a general decreasing trend. Its highest values seem to be around 2021-11 to 2022-01, and 2022-11 to 2023-01. This coincides with typically colder months. 
 
 ```{r}
 #the graphs next to each other
 require(gridExtra)
 grid.arrange(avg_rh_plot, avg_pm25_plot, ncol=2)
 ```
+We can see that humidity and PM2.5 concentrations seem to be somewhat correlated. Higher humidity values seem to also correspond to higher PM2.5 concentrations. This makes sense because in Tamil Nadu, India, the more humid months occur during the colder months - so when cookstoves are more likely to be used, it also happens to be humid. 
+
 
 ```{r}
 rh_and_pm2.5_plot <- ggplot() +
@@ -370,6 +401,7 @@ rh_and_pm2.5_plot <- ggplot() +
     name = "PM2.5 Mean Values",
     sec.axis = sec_axis(~., name = "Humidity", breaks = (c(seq(0,90,10)))
   )) +
+  theme_bw() + 
   theme(axis.text.x = element_text(angle = 45, hjust = 1),
         axis.line.y.right = element_line(color = "gold2"), 
         axis.ticks.y.right = element_line(color = "gold2"),
@@ -378,4 +410,4 @@ rh_and_pm2.5_plot <- ggplot() +
 
 rh_and_pm2.5_plot
 ```
-
+Again, we see the general trend. 
