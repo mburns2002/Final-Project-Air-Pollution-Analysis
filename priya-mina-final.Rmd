@@ -1,0 +1,222 @@
+---
+title: "Priya-Mina: Analysis of Temperature and PM 2.5 levels in Tamil Nadu"
+subtitle: "ESPM 157 Final Project"
+date: "December 2023"
+author: "Mina Burns and Priya Riley"
+output:
+  html_document:
+    df_print: paged
+  pdf_document: default
+---
+
+Title: Analysis of Temperature and PM 2.5 levels in Tamil Nadu
+
+Description of the project: For this project we will use data from Low Cost Sensors in habitations in rural Tamil Nadu to investigate relationships between temperature, humidity and PM 2.5 levels in the region. 
+
+Data required and how it is obtained:
+Data from low cost sensor network deployed in Tamil Nadu, districts Kallakurichi and Nagapattinam.
+AAM-LASSI dataset. Ambient Air Monitoring of LPG At Scale in South India 
+From Mina’s research with the Center for Occupational and Environmental Health 
+
+Three questions / analysis tasks:
+1) Look at connections between temperature and PM 2.5 in one village in India over a time period of about one year. 
+2) Investigate relationship between humidity and PM 2.5 in one village in India over a time period of about one year. 
+3) Compare the two districts, Kallakurichi and Nagapattinam (coastal and inland, respectively), for PM2.5 measurements. 
+
+--------------------------------------------
+
+
+# Preliminary EDA - Priya - using the AQM_Inventory.xlsx
+
+```{r setup, include=FALSE}
+#Read in packages
+library("readxl")
+library("base") 
+library("data.table")
+library("datasets")
+library("DT")
+library("dplyr")
+library("ggplot2")
+library("graphics")
+library("readxl")
+library("tidyr")
+```
+
+```{r}
+#read in metadata 
+metadata <- read_excel("~/Desktop/STEER/AQM_Inventory.xlsx")
+metadata
+```
+
+```{r}
+#I only want the NP and KK locations, because we are looking at Kallakurichi and Nagapattinam.
+#Also, I only want to keep rows where the current status is 'Working'.
+filtered_metadata = filter(metadata, `Current Location` == "NP" | `Current Location` == "KK")
+filtered_metadata = filter(filtered_metadata, `Current Status` == "Working")
+filtered_metadata
+
+```
+
+
+#### Data visualizations using outdoor cleaned data 
+
+
+```{r}
+# read the csv into r. The csv covers ambient and household emissions data in Tamil Nadu, India.
+
+daily_emissions_data = read.csv("~/Desktop/STEER/dailymeans_outdoor_HH_cleaned.csv") 
+  #filter(cleaned_mina_data, #flags greater than 0?)
+
+#filter where the qa_flags and da_flags are above 0, which means they have been flagged for an error.
+cleaned_data = filter(daily_emissions_data, qa_flag == "0" | da_flag == "0")
+
+
+!
+```
+
+```{r}
+#real quick, let's make sure that all variables are either humidity (rh), temperature (temp), or pm2.5
+unique(cleaned_mina_data$variable)
+```
+
+Great! Now lets move on to create one table for district KK and one for NP.
+
+```{r}
+#lets get one table for district KK and one for NP. First, let's do KK. 
+KK_mina_cleaned = filter(cleaned_mina_data, district == "KK") 
+KK_mina_cleaned
+```
+
+```{r}
+#Now let's get a table for district NP.
+NP_mina_cleaned = filter(cleaned_mina_data, district == "NP")
+NP_mina_cleaned
+```
+
+Great - all preliminary tables are set up. Now we can explore the data and our questions. Let's begin by exploring district KK.
+
+```{r}
+#For our question, we only need to look at the date, district, variable, mean_of_medians. 
+KK_selected_data = select(KK_mina_cleaned, c("date", "district", "variable", "mean_of_medians"))
+KK_selected_data
+
+
+##
+```
+
+### Moving on to district NP for the first 2 questions.
+
+
+```{r}
+#For our first two questions, we only need to look at the date, district, variable, and mean_of_medians.
+NP_selected_data = select(NP_mina_cleaned, c("date", "district", "variable", "mean_of_medians"))
+NP_selected_data
+```
+
+1) Look at connections between temperature and PM 2.5 in one village in India over a time period of about one year. 
+
+In this case the chosen village is NP: Nagapattinam.
+```{r}
+
+#lets make columns for temp and pm2.5
+
+filtered_pm2.5 = NP_selected_data %>%
+  filter(variable == "pm2.5") %>%
+  arrange(date, district) %>%
+  mutate(pm25_values = mean_of_medians)
+#filtered_pm2.5
+
+filtered_temp = NP_selected_data %>%
+  filter(variable == "temp") %>%
+  arrange(date, district) %>%
+  mutate(temp_values = mean_of_medians)
+#filtered_temp
+```
+When I look at the number of inputs per date, I see that they have different numbers. Therefore I need to make them into an average value per date. 
+
+```{r}
+average_NP_pm2.5 = filtered_pm2.5 %>%
+  group_by(date) %>%
+  summarise(avg_pm2.5 = mean(pm25_values))
+
+average_NP_pm2.5
+```
+
+```{r}
+average_NP_temp = filtered_temp %>%
+  group_by(date) %>%
+  summarise(avg_temp = mean(temp_values))
+
+average_NP_temp
+```
+
+Awesome. Now I can make some plots with these averages.
+
+```{r}
+ggplot() + 
+  geom_point(data = average_NP_pm2.5, aes(x=date, y = avg_pm2.5)) +
+  geom_point(data = average_NP_temp, aes(x=date, y=avg_temp), color = "blue") +
+  ggtitle("Avg temperature and PM 2.5 concentrations per day") + 
+  labs(x= "Date", y = "Mean Values") +
+  scale_x_discrete(name = "Date", breaks = c(0:10))
+
+```
+
+This isn't super helpful to me. Lets break it down and see if that helps.
+
+
+```{r}
+avg_temp_plot = ggplot() + 
+  geom_point(data = average_NP_temp, aes(x=date, y=avg_temp), color = "coral") +
+  ggtitle("Avg temperature values per day") + 
+  labs(x= "Date", y = "Mean Values") +
+  scale_x_discrete(name = "Date", breaks = c(0:10)) 
+
+avg_pm25_plot = ggplot() + 
+  geom_point(data = average_NP_pm2.5, aes(x=date, y = avg_pm2.5), color = "lightblue") +
+  ggtitle("Avg PM 2.5 concentrations per day") + 
+  labs(x= "Date", y = "Mean Values") +
+  scale_x_discrete(name = "Date", breaks = c(0:10)) 
+
+avg_temp_plot
+avg_pm25_plot
+```
+
+```{r}
+#the graphs next to each other
+require(gridExtra)
+grid.arrange(avg_temp_plot, avg_pm25_plot, ncol=2)
+
+```
+
+We can see there are somewhat similar patterns. It looks like temp increases right after pm2.5 increases.
+
+```{r}
+avg_temp_plot_col = ggplot() + 
+  geom_col(data = average_NP_temp, aes(x=date, y=avg_temp), color = "coral") +
+  ggtitle("Avg temperature values per day") + 
+  labs(x= "Date", y = "Mean Values") +
+  scale_x_discrete(name = "Date", breaks = c(0:10)) 
+
+avg_pm25_plot_col = ggplot() + 
+  geom_col(data = average_NP_pm2.5, aes(x=date, y = avg_pm2.5), color = "lightblue") +
+  ggtitle("Avg PM 2.5 concentrations per day") + 
+  labs(x= "Date", y = "Mean Values") +
+  scale_x_discrete(name = "Date", breaks = c(0:10)) 
+
+require(gridExtra)
+grid.arrange(avg_temp_plot_col, avg_pm25_plot_col, ncol=2)
+
+###it would be nice to have them as lines instead, on the same plot. work on that tmrw
+```
+
+
+
+2) Investigate relationship between humidity and PM 2.5 in one village in India over a time period of about one year. 
+```{r}
+
+```
+
+```{r}
+
+```
