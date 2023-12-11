@@ -70,24 +70,7 @@ dailymeans_outdoor_HH_cleaned <- dailymeans_outdoor_HH_cleaned[, -which(names(da
 head(dailymeans_outdoor_HH_cleaned)
 ```
 
-```{r}
-#read in metadata 
-AQM_Inventory <- read_excel("AQM_Inventory.xlsx")
-head(AQM_Inventory)
-
-metadata <- read_excel("~/Desktop/STEER/AQM_Inventory.xlsx")
-head(metadata)
-```
-
-```{r}
-#I only want the NP and KK locations, because we are looking at Kallakurichi and Nagapattinam.
-#Also, I only want to keep rows where the current status is 'Working'.
-filtered_metadata = filter(metadata, `Current Location` == "NP" | `Current Location` == "KK")
-filtered_metadata = filter(filtered_metadata, `Current Status` == "Working")
-head(filtered_metadata)
-```
-
-#### Data visualizations using outdoor cleaned data
+#### Data Visualizations using Outdoor Cleaned Data
 
 ```{r}
 cleaned_mina_data = read.csv("~/Desktop/STEER/dailymeans_outdoor_HH_cleaned.csv")
