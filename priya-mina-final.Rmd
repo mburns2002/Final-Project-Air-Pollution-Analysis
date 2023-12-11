@@ -24,10 +24,17 @@ Three questions / analysis tasks:
 3) Compare the two districts, Kallakurichi and Nagapattinam (coastal and inland, respectively), for PM2.5 measurements. 
 
 --------------------------------------------
+<<<<<<< HEAD
 
 
 # Preliminary EDA - Priya - using the AQM_Inventory.xlsx
 
+=======
+# Preliminary EDA - Priya - using the AQM_Inventory.xlsx
+
+TN? Kallakurichi and Nagapattinam. KK? NP?those exist in the data set so ima say yes.
+
+>>>>>>> 1e9f6b959a9ac1bf15774fa50a4b2bda3528901e
 ```{r setup, include=FALSE}
 #Read in packages
 library("readxl")
@@ -62,6 +69,7 @@ filtered_metadata
 
 
 ```{r}
+<<<<<<< HEAD
 # read the csv into r. The csv covers ambient and household emissions data in Tamil Nadu, India.
 
 daily_emissions_data = read.csv("~/Desktop/STEER/dailymeans_outdoor_HH_cleaned.csv") 
@@ -72,6 +80,11 @@ cleaned_data = filter(daily_emissions_data, qa_flag == "0" | da_flag == "0")
 
 
 !
+=======
+cleaned_mina_data = read.csv("~/Desktop/STEER/dailymeans_outdoor_HH_cleaned.csv")
+cleaned_mina_data
+# of course, later on I can change the names to not call it mina_data to be more professinonal. But for now it is helpful to me!
+>>>>>>> 1e9f6b959a9ac1bf15774fa50a4b2bda3528901e
 ```
 
 ```{r}
@@ -83,12 +96,20 @@ Great! Now lets move on to create one table for district KK and one for NP.
 
 ```{r}
 #lets get one table for district KK and one for NP. First, let's do KK. 
+<<<<<<< HEAD
 KK_mina_cleaned = filter(cleaned_mina_data, district == "KK") 
+=======
+KK_mina_cleaned = filter(cleaned_mina_data, district == "KK")
+>>>>>>> 1e9f6b959a9ac1bf15774fa50a4b2bda3528901e
 KK_mina_cleaned
 ```
 
 ```{r}
+<<<<<<< HEAD
 #Now let's get a table for district NP.
+=======
+#Now let's get a table for distict NP.
+>>>>>>> 1e9f6b959a9ac1bf15774fa50a4b2bda3528901e
 NP_mina_cleaned = filter(cleaned_mina_data, district == "NP")
 NP_mina_cleaned
 ```
@@ -96,6 +117,7 @@ NP_mina_cleaned
 Great - all preliminary tables are set up. Now we can explore the data and our questions. Let's begin by exploring district KK.
 
 ```{r}
+<<<<<<< HEAD
 #For our question, we only need to look at the date, district, variable, mean_of_medians. 
 KK_selected_data = select(KK_mina_cleaned, c("date", "district", "variable", "mean_of_medians"))
 KK_selected_data
@@ -103,6 +125,13 @@ KK_selected_data
 
 ##
 ```
+=======
+#For our question, we only need to look at the date, district, variable, mean_of_medians, qa_flag, and da_flag.
+KK_selected_data = select(KK_mina_cleaned, c("date", "district", "variable", "mean_of_medians", "qa_flag", "da_flag"))
+KK_selected_data
+```
+#### Uh oh! it looks like all this data for district KK is in the span of one month. That will not allow us to answer our 3rd research question ! (at least, this alone will not be able to answer it. maybe these plus the missing rds to create a merged table, would allow us to answer the third question. )
+>>>>>>> 1e9f6b959a9ac1bf15774fa50a4b2bda3528901e
 
 ### Moving on to district NP for the first 2 questions.
 
@@ -113,12 +142,23 @@ NP_selected_data = select(NP_mina_cleaned, c("date", "district", "variable", "me
 NP_selected_data
 ```
 
+<<<<<<< HEAD
+=======
+Above, we see that this data goes only from october to december, which is two months. Thus this limited data set also will not answer our first two questions, but I will do a few graphs regardless. Once we get the full data figured out then I can make graphs for it to fully work. 
+
+>>>>>>> 1e9f6b959a9ac1bf15774fa50a4b2bda3528901e
 1) Look at connections between temperature and PM 2.5 in one village in India over a time period of about one year. 
 
 In this case the chosen village is NP: Nagapattinam.
 ```{r}
 
+<<<<<<< HEAD
 #lets make columns for temp and pm2.5
+=======
+#lets make three columns, for pm2.5, rh, and temp. --> thats hard to do! eek
+
+#ok instead lets make columns for temp and pm2.5
+>>>>>>> 1e9f6b959a9ac1bf15774fa50a4b2bda3528901e
 
 filtered_pm2.5 = NP_selected_data %>%
   filter(variable == "pm2.5") %>%
