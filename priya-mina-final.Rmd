@@ -158,7 +158,33 @@ ggplot() +
 ```
 
 This is a plot with the average temperatures plotted over the average PM2.5 concentrations.
-The makeup of this graph isn't super helpful to me because the scales are pretty different. Lets break it down and see if that helps.
+The makeup of this graph isn't super helpful to me because the scales are pretty different. 
+
+```{r}
+#combined plot
+
+combined_plot <- ggplot() +
+  geom_line(data = average_NP_temp, aes(x = date, y = avg_temp, group = 1), color = "coral") +
+  geom_line(data = average_NP_pm2.5, aes(x = date, y = avg_pm2.5, group = 1), color = "lightblue3") +
+  ggtitle("Avg Temperature and PM2.5 Concentrations per Day") +
+  labs(x = "Date", y = "PM2.5 Mean Values") +
+  scale_x_date(date_labels = "%Y-%m-%d", date_breaks = "2 month") +
+  scale_y_continuous(
+    name = "PM2.5 Mean Values",
+    sec.axis = sec_axis(~., name = "Temperature", breaks = (c(0, 20, 30, 40)))
+  ) +
+  theme_bw() + 
+  theme(axis.text.x = element_text(angle = 45, hjust = 1),
+        axis.line.y.right = element_line(color = "coral"), 
+        axis.ticks.y.right = element_line(color = "coral"),
+        axis.text.y.right = element_text(color = "coral"),
+        axis.title.y.right = element_text(color = "coral1")
+        )
+
+combined_plot
+```
+
+This graph includes both variables in the same plot. It was difficult to scale so it did not end up being as helpful as we hoped. Lets break it down and see if that helps.
 
 ```{r}
 #plot avg temperature per day alone
@@ -223,107 +249,6 @@ grid.arrange(avg_temp_plot_line, avg_pm25_plot_line, ncol=2)
 
 ```
 This plot lets us see the general trend that higher temps connect with lower PM2.5, and higher PM2.5 occurs during lower temps. 
-
-
-```{r}
-#combined plot
-
-combined_plot <- ggplot() +
-  geom_line(data = average_NP_temp, aes(x = date, y = avg_temp, group = 1), color = "coral") +
-  geom_line(data = average_NP_pm2.5, aes(x = date, y = avg_pm2.5, group = 1), color = "lightblue3") +
-  ggtitle("Avg Temperature and PM2.5 Concentrations per Day") +
-  labs(x = "Date", y = "PM2.5 Mean Values") +
-  scale_x_date(date_labels = "%Y-%m-%d", date_breaks = "2 month") +
-  scale_y_continuous(
-    name = "PM2.5 Mean Values",
-    sec.axis = sec_axis(~., name = "Temperature", breaks = (c(0, 20, 30, 40)))
-  ) +
-  theme_bw() + 
-  theme(axis.text.x = element_text(angle = 45, hjust = 1),
-        axis.line.y.right = element_line(color = "coral"), 
-        axis.ticks.y.right = element_line(color = "coral"),
-        axis.text.y.right = element_text(color = "coral"),
-        axis.title.y.right = element_text(color = "coral1")
-        )
-
-combined_plot
-```
-This graph includes both variables in the same plot. It was difficult to scale so it did not end up being as helpful as we hoped.
-
-
-###### Temp and PM2.5 Analysis by Month.
-Doing similar analysis, but grouping by month. 
-
-```{r}
-# I will also find the averages per month, for both variables. This might allow me to the relationship between temperature and PM2.5 in a different way. 
-
-library("tidyverse")
-average_NP_pm2.5_monthly = filtered_pm2.5 %>%
-  group_by(month = lubridate::floor_date(date, 'month')) %>%
-  summarize(avg_monthly_pm2.5 = mean(pm2.5_values))
- 
-
-average_NP_temp_monthly = filtered_temp %>%
-  group_by(month = lubridate::floor_date(date, 'month')) %>%
-  summarize(avg_monthly_temp = mean(temp_values))
-
-head(average_NP_pm2.5_monthly)
-```
-
-```{r}
-combined_plot_monthly <- ggplot() +
-  geom_line(data = average_NP_temp_monthly, aes(x = month, y = avg_monthly_temp, group = 1), color = "coral") +
-  geom_line(data = average_NP_pm2.5_monthly, aes(x = month, y = avg_monthly_pm2.5, group = 1), color = "lightblue3") +
-  ggtitle("Avg Temperature and PM2.5 Concentrations per Month") +
-  labs(x = "Date", y = "PM2.5 Mean Monthly Values") +
-  scale_x_date(date_labels = "%Y-%m-%d", date_breaks = "1 month") +
-  scale_y_continuous(
-    name = "PM2.5 Mean Monthly Values",
-    sec.axis = sec_axis(~., name = "Temperature", breaks = (c(0, 20, 30, 40)))
-  ) +
-  theme_bw() + 
-  theme(axis.text.x = element_text(angle = 45, hjust = 1),
-        axis.line.y.right = element_line(color = "coral"), 
-        axis.ticks.y.right = element_line(color = "coral"),
-        axis.text.y.right = element_text(color = "coral"),
-        axis.title.y.right = element_text(color = "coral1")
-        )
-
-combined_plot_monthly
-
-#can delete lol
-```
-LOLLLLLLLLLL
-although - it does let us see that higher temps relate with lower PM2.5, and lower temps relate with higher PM2.5.
-
-
-```{r}
-#can delete
-avg_temp_plot_col_monthly = ggplot() + 
-  geom_col(data = average_NP_temp_monthly, aes(x=month, y=avg_monthly_temp, group = 1), fill = "coral") +
-  ggtitle("Avg Temperature Values per Month") + 
-  labs(x= "Date", y = "Mean Values") +
-  scale_x_date(date_labels = "%Y-%m-%d", date_breaks = "2 month") + 
-  scale_y_continuous(breaks = seq(0, 40, 5)) + 
-  theme_bw() + 
-  theme(axis.text.x = element_text(angle = 45, hjust = 1))
-
-avg_pm25_plot_col_monthly = ggplot() + 
-  geom_col(data = average_NP_pm2.5_monthly, aes(x = month, y = avg_monthly_pm2.5, group = 1), fill = "lightblue3") +
-  ggtitle("Avg PM2.5 Concentrations per Month") + 
-  labs(x= "Date", y = "Mean Values") +
-  scale_x_date(date_labels = "%Y-%m-%d", date_breaks = "2 month") +
-  scale_y_continuous(breaks = seq(0, 100, 15)) + 
-  theme_bw() + 
-  theme(axis.text.x = element_text(angle = 45, hjust = 1))
-
-require(gridExtra)
-grid.arrange(avg_temp_plot_col_monthly, avg_pm25_plot_col_monthly, ncol=2)
-```
-
-This is a graph that further averages values by month. This helps us see the average monthly lowest and highest temps and PM2.5 concentrations. 
-Highest temperatures occur from 03-06 in 2022 and 03 to 08 in 2023. 
-Lowest PM2.5 concentrations occur from 04-09 in 2022 and 06-08 in 2023. 
 
 
 ## 2.) Investigate relationship between humidity and PM2.5 in one village in India over a time period of about one year.
@@ -421,3 +346,159 @@ require(gridExtra)
 grid.arrange(avg_temp_plot, avg_rh_plot, avg_pm25_plot, ncol=3)
 ```
 Lastly, here are all three variables plotted together. We can see that temperature is somewhat inversely relational with humidity and PM2.5. Higher temperatures coincide with lower humidity and PM2.5 values, and vice versa. This is backed up by [Ding et al. 2021](https://pubmed.ncbi.nlm.nih.gov/34708953/).
+
+## Question 3
+
+![Tamil
+Nadu](https://www.circleofblue.org/wp-content/uploads/2017/04/Tamil-Nadu-Map-all-stories.png)
+
+![district map](district_map.jpg)
+
+Notes: - flag represents data availability (da flag) - flagsum is
+greater than 0 (qa flag)
+
+3)  Compare the two districts, Kallakurichi and Nagapattinam (coastal
+    and inland, respectively), for PM2.5 measurements.
+
+```{r setup, include=FALSE}
+# loads in multiple packages at once and install packages
+# if they are not installed locally
+pacman::p_load(readxl, 
+               base,
+               data.table,
+               DT,
+               dplyr,
+               ggplot2,
+               graphics,
+               readxl,
+               tidyr,
+               readr, 
+               lubridate)
+```
+
+## read in data
+
+```{r}
+dailymeans <- read_csv("dailymeans_outdoor_HH_cleaned.csv", show_col_types = FALSE)
+dailymeans <- dailymeans[, -which(names(dailymeans) == "...1")]
+head(dailymeans)
+```
+
+### Data Cleaning
+
+```{r}
+# filter out data with qa and da flags (quality and data availability flags)
+
+dailymeans <- dailymeans |> 
+  filter(qa_flag == 0 & da_flag == 0) |> 
+  select(-c(qa_flag, da_flag)) # drop these columns as no longer needed now 
+```
+
+### Analysis
+
+Start analysis for question 3 Compare the two districts, Kallakurichi
+and Nagapattinam (coastal and inland, respectively), for PM2.5
+measurements.)
+
+### Initial Visualization
+
+```{r}
+# filter for pm2.5 
+dailymeans |> 
+  filter(variable == "pm2.5") |> # filter for pm2.5 
+  ggplot() + 
+  geom_line(aes(x = date, mean_of_medians, color = district), alpha = 0.6) +
+  theme_bw()
+```
+
+> Initial visualization shows up that there is a gap in the time that
+> each district has data. Next, will subset to the dates that both
+> districts are represented for.
+
+```{r}
+# what date is KK first represented? 
+dailymeans |> filter(district == "KK") |> 
+  arrange((date))
+```
+
+```{r}
+# what does KK data go until? 
+dailymeans |> filter(district == "KK") |> 
+  arrange(desc(date))
+```
+
+```{r}
+# filter for dates that KK is represented in 
+filtered_dates <- dailymeans |> 
+  filter(date > "2022-08-04" & date < "2023-03-15") |> 
+  filter(variable == "pm2.5")  # filter for pm2.5 
+  
+ggplot(data = filtered_dates) + 
+  geom_line(aes(x = date, mean_of_medians, color = district), alpha = 0.6) +
+  theme_bw()
+```
+
+> Nice, this is a better visualization. Let's improve the plot, add
+> labels, and see what they look like on separate plots.
+
+```{r}
+filtered_dates |>
+  ggplot() + 
+  geom_line(aes(x = date, mean_of_medians, color = district), alpha = 0.5) + 
+  labs(title = "Average PM2.5 over Time for Two Districts", x = "Date", y = "Average PM2.5") + 
+  scale_x_date(date_breaks = "1 month" , date_labels = "%b-%y") + 
+  theme_bw()
+```
+
+```{r}
+filtered_dates |>
+  ggplot() + 
+  geom_line(aes(x = date, mean_of_medians, color = district), alpha = 0.5) + 
+  labs(title = "Average PM2.5 over Time for Two Districts", x = "Date", y = "Average PM2.5") + 
+  theme_bw() + 
+  scale_x_date(date_breaks = "1 month" , date_labels = "%b-%y") + 
+  facet_wrap(~district, ncol = 2) + 
+  theme(axis.text.x = element_text(angle = 90, hjust = 1))
+```
+
+```{r}
+tab <- filtered_dates |>
+  group_by(district) |>
+  summarize(average = mean(mean_of_medians),
+            se = sd(mean_of_medians) / sqrt(n()))
+tab
+```
+
+```{r}
+tab |> 
+  ggplot() + 
+  geom_col(aes(x = district, y = average, fill = district), color = "black") + 
+  scale_y_continuous(breaks = seq(0, 50, 5)) + 
+  theme_bw() + 
+  labs(title = "Average PM2.5 per District", x = "District", y = "Average PM2.5")
+```
+
+```{r}
+filtered_dates |>
+  ggplot() + 
+  geom_point(aes(x = date, mean_of_medians, color = district), alpha = 0.6) + 
+  labs(title = "Average PM2.5 over Time for Two Districts", x = "Date", y = "Average PM2.5") + 
+  theme_bw() + 
+  scale_x_date(date_breaks = "1 month" , date_labels = "%b-%y") + 
+  facet_wrap(~district, ncol = 2) + 
+  theme(axis.text.x = element_text(angle = 90, hjust = 1))
+```
+
+```{r}
+filtered_dates |>
+  ggplot() + 
+  geom_density(aes(x = mean_of_medians, fill = district), alpha = 0.5) + 
+  labs(title = "Average PM2.5 Density", x = "Average PM2.5", y = "Density") + 
+  theme_bw() 
+```
+
+### Analysis Results
+
+> We see based on the results on the analysis that Kallakurichi (KK) has a higher average PM2.5, 
+while Nagapattinam (NP) has lower average PM2.5. Referencing the map again, we can see that Kallakurichi is 
+inland, and Nagapattinam is coastally located. Thus, one explanation for the differences between the PM2.5 for the two districts is the potential coastal influence of NP. The influx of wind from the sea can blow away particulate matter, reducing the average PM2.5 ratings picked up by the sensors. KK in quite far inland, so it wouldn't experience the same winds from the sea, which may explain why it has higher PM2.5 sensor readings. 
