@@ -24,7 +24,7 @@ From Mina’s research with the Center for Occupational and Environmental Health
 3. Compare the two districts, Kallakurichi and Nagapattinam (coastal and inland, respectively), for PM2.5 measurements. 
 
 ## Three additional skills
-- Use of at least 5 `dplyr` verbs / functions
+- Use of at least 5 `dplyr` verbs / functions (including summarize, group_by, count, filter, arrange, select, mutate) 
 - Expansion of ggplot functions (to include more than default characteristics)
 - Making layout and presentation into secondary output (e.g. .pdf) 
 
