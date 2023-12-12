@@ -10,13 +10,18 @@
 ## NOTE
 For this project, our final results and outputs will be in the file: `priya-mina-final.Rmd`. 
 
+## Background Images 
+![Tamil
+Nadu](https://www.circleofblue.org/wp-content/uploads/2017/04/Tamil-Nadu-Map-all-stories.png)
+
+![district map](district_map.jpg)
 ## Description of the Project 
 For this project we will use data from Low Cost Sensors (LCS) in habitations in rural Tamil Nadu to investigate relationships between temperature, humidity and PM 2.5 levels in the region. 
 
 ## Data required and how it is obtained:
 The data is from a low cost sensor (LCS) network deployed in Tamil Nadu, districts Kallakurichi and Nagapattinam.
-AAM-LASSI dataset. Ambient Air Monitoring of LPG At Scale in South India 
-From Mina’s research with the Center for Occupational and Environmental Health
+AAM-LASSI dataset. Ambient Air Monitoring of LPG At Scale in South India. 
+From Mina’s research with the Center for Occupational and Environmental Health. 
 
 ## Three Tasks 
 1. Look at connections between temperature and PM 2.5 in one village in India over a time period of about one year. 
@@ -33,12 +38,7 @@ From Mina’s research with the Center for Occupational and Environmental Health
 - `README.md` this file, a general overview of the repository in markdown format.  
 - `.gitignore` Optional file, ignore common file types we don't want to accidentally commit to GitHub. Most projects should use this. 
 - `<REPO-NAME>.Rproj` Optional, an R-Project file created by RStudio for it's own configuration.  Some people prefer to `.gitignore` this file.
-
-
-### Infrastructure for Testing
-
-
-- `DESCRIPTION` a metadata file for the repository, based on the R package standard. It's main purpose here is as a place to list any additional R packages/libraries needed for any of the `.Rmd` files to run.
+- `priya-mina-final.Rmd`: where our work and outputs for this project are located. 
 
 
 
