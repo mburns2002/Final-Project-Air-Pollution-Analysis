@@ -26,8 +26,8 @@ AAM-LASSI dataset. Ambient Air Monitoring of LPG At Scale in South India.
 From Mina’s research with the Center for Occupational and Environmental Health. 
 
 ## Three Tasks 
-1. Look at connections between temperature and PM 2.5 in one village in India over a time period of about one year. 
-2. Investigate relationship between humidity and PM 2.5 in one village in India over a time period of about one year. 
+1. Look at connections between temperature and PM 2.5 in one district in India over a time period of about one year. 
+2. Investigate relationship between humidity and PM 2.5 in one district in India over a time period of about one year. 
 3. Compare the two districts, Kallakurichi and Nagapattinam (coastal and inland, respectively), for PM2.5 measurements. 
 
 ## Three additional skills
