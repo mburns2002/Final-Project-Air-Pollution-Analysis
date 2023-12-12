@@ -6,9 +6,6 @@ editor_options:
 
 ### Mina working on question 3
 
-![Tamil
-Nadu](https://www.circleofblue.org/wp-content/uploads/2017/04/Tamil-Nadu-Map-all-stories.png)
-
 ![district map](district_map.jpg)
 
 Notes: - flag represents data availability (da flag) - flagsum is
@@ -20,6 +17,7 @@ greater than 0 (qa flag)
 ```{r setup, include=FALSE}
 # loads in multiple packages at once and install packages
 # if they are not installed locally
+install.packages("pacman")
 pacman::p_load(readxl, 
                base,
                data.table,

@@ -51,6 +51,9 @@ Occupational and Environmental Health.
 ```{r setup, include=FALSE}
 # loads in multiple packages at once and install packages
 # if they are not installed locally
+options(repos = c(CRAN = "https://cran.rstudio.com"))
+
+install.packages("pacman")
 pacman::p_load(readxl, 
                base,
                data.table,
