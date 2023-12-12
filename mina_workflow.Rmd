@@ -12,10 +12,10 @@ Nadu](https://www.circleofblue.org/wp-content/uploads/2017/04/Tamil-Nadu-Map-all
 ![district map](district_map.jpg)
 
 Notes: - flag represents data availability (da flag) - flagsum is
-greater than 0 (qa flag). 
+greater than 0 (qa flag)
 
-3)  Compare the two districts, Kallakurichi and Nagapattinam (inland and
-    coastal, respectively), for PM2.5 measurements.
+3)  Compare the two districts, Kallakurichi and Nagapattinam (coastal
+    and inland, respectively), for PM2.5 measurements.
 
 ```{r setup, include=FALSE}
 # loads in multiple packages at once and install packages
@@ -34,6 +34,7 @@ pacman::p_load(readxl,
 ```
 
 ## read in data
+
 ```{r}
 dailymeans <- read_csv("dailymeans_outdoor_HH_cleaned.csv", show_col_types = FALSE)
 dailymeans <- dailymeans[, -which(names(dailymeans) == "...1")]
@@ -41,8 +42,10 @@ head(dailymeans)
 ```
 
 ### Data Cleaning
-Here, filter out data with qa and da flags (quality and data availability flags). 
+
 ```{r}
+# filter out data with qa and da flags (quality and data availability flags)
+
 dailymeans <- dailymeans |> 
   filter(qa_flag == 0 & da_flag == 0) |> 
   select(-c(qa_flag, da_flag)) # drop these columns as no longer needed now 
@@ -55,7 +58,7 @@ and Nagapattinam (coastal and inland, respectively), for PM2.5
 measurements.)
 
 ### Initial Visualization
-Select PM2.5 as the variable of interest and visualize. 
+
 ```{r}
 # filter for pm2.5 
 dailymeans |> 
@@ -82,8 +85,6 @@ dailymeans |> filter(district == "KK") |>
 ```
 
 ```{r}
-# change x axis 
-
 # filter for dates that KK is represented in 
 filtered_dates <- dailymeans |> 
   filter(date > "2022-08-04" & date < "2023-03-15") |> 
@@ -106,20 +107,17 @@ filtered_dates |>
   theme_bw()
 ```
 
-> Now we can see how the two districts compare. Let's visualize them with a facet wrap next. 
-
 ```{r}
 filtered_dates |>
   ggplot() + 
   geom_line(aes(x = date, mean_of_medians, color = district), alpha = 0.5) + 
   labs(title = "Average PM2.5 over Time for Two Districts", x = "Date", y = "Average PM2.5") + 
   theme_bw() + 
-  scale_y_continuous(breaks = seq(0, 400, 50)) + 
   scale_x_date(date_breaks = "1 month" , date_labels = "%b-%y") + 
   facet_wrap(~district, ncol = 2) + 
   theme(axis.text.x = element_text(angle = 90, hjust = 1))
 ```
-Here, create a table with an average PM2.5 summary per district, along with standard error. 
+
 ```{r}
 tab <- filtered_dates |>
   group_by(district) |>
@@ -128,7 +126,6 @@ tab <- filtered_dates |>
 tab
 ```
 
-Visualize the summarized values as a bar plot. 
 ```{r}
 tab |> 
   ggplot() + 
@@ -137,7 +134,7 @@ tab |>
   theme_bw() + 
   labs(title = "Average PM2.5 per District", x = "District", y = "Average PM2.5")
 ```
-Facet wrap the two plots. 
+
 ```{r}
 filtered_dates |>
   ggplot() + 
@@ -149,25 +146,18 @@ filtered_dates |>
   theme(axis.text.x = element_text(angle = 90, hjust = 1))
 ```
 
-Generate a density plot for the averages of PM2.5. 
 ```{r}
 filtered_dates |>
   ggplot() + 
   geom_density(aes(x = mean_of_medians, fill = district), alpha = 0.5) + 
   labs(title = "Average PM2.5 Density", x = "Average PM2.5", y = "Density") + 
-  scale_x_continuous(breaks = seq(0, 400, 50)) + 
   theme_bw() 
 ```
 
 ### Analysis Results
 
-> We see based on the results on the analysis that Kallakurichi (KK) has
-> a higher average PM2.5, while Nagapattinam (NP) has lower average
-> PM2.5. Referencing the map again, we can see that Kallakurichi is
-> inland, and Nagapattinam is coastally located. Thus, one explanation
-> for the differences between the PM2.5 for the two districts is the
-> potential coastal influence of NP. The influx of wind from the sea can
-> blow away particulate matter, reducing the average PM2.5 ratings
-> picked up by the sensors. KK is quite far inland, so it wouldn't
-> experience the same winds from the sea, which may explain why it has
-> higher PM2.5 sensor readings.
+> We see based on the results on the analysis that Kallakurichi (KK) has a higher average PM2.5, 
+while Nagapattinam (NP) has lower average PM2.5. Referencing the map again, we can see that Kallakurichi is 
+inland, and Nagapattinam is coastally located. Thus, one explanation for the differences between the PM2.5 for the two districts is the potential coastal influence of NP. The influx of wind from the sea can blow away particulate matter, reducing the average PM2.5 ratings picked up by the sensors. KK in quite far inland, so it wouldn't experience the same winds from the sea, which may explain why it has higher PM2.5 sensor readings. 
+
+
