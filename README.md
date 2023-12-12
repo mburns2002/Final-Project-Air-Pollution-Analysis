@@ -6,17 +6,28 @@
 - Mina Burns @mburns2002
 - Priya Riley @PriyaRiley
 
-This repository is a template for your team's repository.
+## NOTE
+For this project, our final results and outputs will be in the file: `priya-mina-final.Rmd`. 
 
-## assignment
+## Description of the Project 
+For this project we will use data from Low Cost Sensors (LCS) in habitations in rural Tamil Nadu to investigate relationships between temperature, humidity and PM 2.5 levels in the region. 
 
-All work for this assignment should be in the `assignment` directory.  You will work in the `.Rmd` notebook, and commit your rendered output files (`.md` and associated files) in the `assignment` directory as well.
+## Data required and how it is obtained:
+The data is from a low cost sensor (LCS) network deployed in Tamil Nadu, districts Kallakurichi and Nagapattinam.
+AAM-LASSI dataset. Ambient Air Monitoring of LPG At Scale in South India 
+From Mina’s research with the Center for Occupational and Environmental Health
 
-## Special files
+## Three Tasks 
+1. Look at connections between temperature and PM 2.5 in one village in India over a time period of about one year. 
+2. Investigate relationship between humidity and PM 2.5 in one village in India over a time period of about one year. 
+3. Compare the two districts, Kallakurichi and Nagapattinam (coastal and inland, respectively), for PM2.5 measurements. 
 
-All team repositories will also include most of the special files found here:
+## Three additional skills
+- Use of at least 5 `dplyr` verbs / functions
+- Expansion of ggplot functions (to include more than default characteristics)
+- Making layout and presentation into secondary output (e.g. .pdf) 
 
-### Common files
+### Project files 
 
 - `README.md` this file, a general overview of the repository in markdown format.  
 - `.gitignore` Optional file, ignore common file types we don't want to accidentally commit to GitHub. Most projects should use this. 
