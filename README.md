@@ -15,6 +15,7 @@ For this project, our final results and outputs will be in the file: `priya-mina
 Nadu](https://www.circleofblue.org/wp-content/uploads/2017/04/Tamil-Nadu-Map-all-stories.png)
 
 ![district map](district_map.jpg)
+*The study districts are indicated in green outline.* 
 
 ## Description of the Project 
 For this project we will use data from Low Cost Sensors (LCS) in habitations in rural Tamil Nadu to investigate relationships between temperature, humidity and PM 2.5 levels in the region. 
