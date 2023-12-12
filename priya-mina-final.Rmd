@@ -4,9 +4,9 @@ subtitle: "ESPM 157 Final Project"
 date: "December 11, 2023"
 author: "Mina Burns,  Priya Riley"
 output:
+  pdf_document: default
   html_document:
     df_print: paged
-  pdf_document: default
 editor_options: 
   markdown: 
     wrap: 72
@@ -29,10 +29,7 @@ Nagapattinam (NP). AAM-LASSI dataset. Ambient Air Monitoring of LPG At
 Scale in South India From Mina's research with the Center for
 Occupational and Environmental Health.
 
-## Project Maps / Images 
-![Tamil
-Nadu](https://www.circleofblue.org/wp-content/uploads/2017/04/Tamil-Nadu-Map-all-stories.png)
-
+## Project Map 
 ![district map](district_map.jpg)
 
 **Three questions / analysis tasks:**
@@ -51,20 +48,21 @@ Nadu](https://www.circleofblue.org/wp-content/uploads/2017/04/Tamil-Nadu-Map-all
 ------------------------------------------------------------------------
 
 ## Preliminary EDA
-
 ```{r setup, include=FALSE}
-#Read in packages
-library("readxl")
-library("base") 
-library("data.table")
-library("datasets")
-library("DT")
-library("dplyr")
-library("ggplot2")
-library("graphics")
-library("readxl")
-library("tidyr")
-library("readr")
+# loads in multiple packages at once and install packages
+# if they are not installed locally
+pacman::p_load(readxl, 
+               base,
+               data.table,
+               DT,
+               datasets, 
+               dplyr,
+               ggplot2,
+               graphics,
+               readxl,
+               tidyr,
+               readr, 
+               lubridate)
 ```
 
 ### Read in Data
@@ -428,22 +426,6 @@ vice versa. This is backed up by [Ding et al.
 
 3)  Compare the two districts, Kallakurichi and Nagapattinam (coastal
     and inland, respectively), for PM2.5 measurements.
-
-```{r setup, include=FALSE}
-# loads in multiple packages at once and install packages
-# if they are not installed locally
-pacman::p_load(readxl, 
-               base,
-               data.table,
-               DT,
-               dplyr,
-               ggplot2,
-               graphics,
-               readxl,
-               tidyr,
-               readr, 
-               lubridate)
-```
 
 ## Read in data
 
